@@ -18,5 +18,5 @@ RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --no-dev --optimize-autoloader
-
+RUN chmod -R 775 storage bootstrap/cache
 EXPOSE 80
