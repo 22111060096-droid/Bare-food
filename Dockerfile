@@ -6,11 +6,11 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     curl \
-    zip
+    zip \
+    libpq-dev
 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
-# cài composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . .
@@ -21,7 +21,6 @@ RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available
 
 RUN composer install --no-dev --optimize-autoloader
 
-# 🔥 THÊM DÒNG NÀY
 RUN chmod -R 777 storage bootstrap/cache
 
 EXPOSE 80
