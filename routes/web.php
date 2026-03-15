@@ -47,6 +47,7 @@ Route::get('/membership', [MembershipController::class, 'index'])->name('members
 Route::middleware('auth')->group(function () {
     Route::get('/account', [AccountController::class, 'index'])->name('account.index');
     Route::get('/account/orders/{order}', [AccountController::class, 'showOrder'])->name('account.orders.show');
+    Route::delete('/account', [AccountController::class, 'destroy'])->name('account.destroy');
 });
 
 Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');

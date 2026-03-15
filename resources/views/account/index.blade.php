@@ -24,6 +24,14 @@
                     Đăng xuất
                 </button>
             </form>
+
+            <form method="POST" action="{{ route('account.destroy') }}" style="margin-top:10px;" onsubmit="return confirm('Bạn có chắc muốn xóa tài khoản? Hành động này không thể hoàn tác.')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-accent">
+                    Xóa tài khoản
+                </button>
+            </form>
         </section>
 
         <section style="background:#FFFFFF;border-radius:18px;padding:14px 16px 14px;box-shadow:0 14px 30px rgba(0,0,0,0.06);">

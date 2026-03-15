@@ -96,5 +96,21 @@ class AccountController extends Controller
             'order' => $order,
         ]);
     }
+
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+
+        Order::query()->where('user_id', $user->id)->update(['user_id' => null]);
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        $user->delete();
+
+        return redirect()->route('home')->with('success', 'Tài khoản của bạn đã được xóa.');
+    }
 }
 
