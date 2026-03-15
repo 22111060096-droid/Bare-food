@@ -433,11 +433,14 @@
                     </a>
                 </div>
             </nav>
-            
-            <a href="{{ route('logout') }}" class="btn btn-danger logout-btn" onclick="return confirm('Bạn có chắc muốn đăng xuất?')">
-                <span>🚪</span>
-                <span>Đăng xuất</span>
-            </a>
+
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;" onsubmit="return confirm('Bạn có chắc muốn đăng xuất?')">
+                @csrf
+                <button type="submit" class="btn btn-danger logout-btn">
+                    <span>🚪</span>
+                    <span>Đăng xuất</span>
+                </button>
+            </form>
         </div>
         
         <!-- Main Content -->
