@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class AdminCategoryController extends Controller
 {
@@ -59,18 +59,35 @@ class AdminCategoryController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('categories', 'slug')->ignore($categoryId),
-            ],
+            'slug' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ]);
+
+        $baseSlug = trim((string) ($data['slug'] ?? ''));
+        if ($baseSlug === '') {
+            $baseSlug = Str::slug((string) $data['name']);
+        }
+        if ($baseSlug === '') {
+            $baseSlug = 'danh-muc';
+        }
+
+        $slug = $baseSlug;
+        $i = 2;
+        while (Category::query()
+            ->when($categoryId, fn ($q) => $q->whereKeyNot($categoryId))
+            ->where('slug', $slug)
+            ->exists()) {
+            $slug = $baseSlug.'-'.$i;
+            $i++;
+        }
+
+        $data['slug'] = $slug;
+
+        return $data;
     }
 }
 

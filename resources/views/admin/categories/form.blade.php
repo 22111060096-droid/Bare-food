@@ -183,8 +183,8 @@
 
                     <div class="form-group">
                         <label class="form-label" for="slug">Slug</label>
-                        <input id="slug" name="slug" type="text" class="form-control" value="{{ old('slug', $category->slug) }}" required>
-                        <span class="help-text">Ví dụ: mon-chinh, salad, nuoc-uong</span>
+                        <input id="slug" name="slug" type="text" class="form-control" value="{{ old('slug', $category->slug) }}">
+                        <span class="help-text">Có thể để trống, hệ thống sẽ tự tạo từ tên. Ví dụ: mon-chinh, salad, nuoc-uong</span>
                         @error('slug')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
