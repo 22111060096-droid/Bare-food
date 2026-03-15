@@ -217,6 +217,18 @@
 
 @section('content')
     <div class="container">
+        @if(session('success'))
+            <div style="margin-bottom: 16px; padding: 12px 16px; background: rgba(189, 72, 35, 0.12); border: 1px solid rgba(189, 72, 35, 0.25); color: var(--bare-primary); border-radius: 12px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div style="margin-bottom: 16px; padding: 12px 16px; background: rgba(220, 38, 38, 0.10); border: 1px solid rgba(220, 38, 38, 0.20); color: #dc2626; border-radius: 12px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Admin Header -->
         <div class="page-header">
             <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
@@ -295,6 +307,13 @@
                                     <a href="{{ route('admin.users.show', $user) }}" class="btn-sm btn-view">
                                         Xem chi tiết
                                     </a>
+
+                                    <form action="{{ route('admin.users.toggle-admin', $user) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn-sm" style="background: {{ $user->is_admin ? 'rgba(220, 38, 38, 0.12)' : 'rgba(189, 72, 35, 0.12)' }}; color: {{ $user->is_admin ? '#dc2626' : 'var(--bare-primary)' }}; border: 1px solid {{ $user->is_admin ? 'rgba(220, 38, 38, 0.25)' : 'rgba(189, 72, 35, 0.25)' }};">
+                                            {{ $user->is_admin ? 'Gỡ admin' : 'Cấp admin' }}
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminUserController extends Controller
 {
@@ -32,6 +33,26 @@ class AdminUserController extends Controller
         $user->update($data);
 
         return redirect()->route('admin.users.show', $user)->with('success', 'Đã cập nhật thông tin thành viên.');
+    }
+
+    public function toggleAdmin(User $user)
+    {
+        if (Auth::id() === $user->id) {
+            return redirect()->route('admin.users.index')->with('error', 'Bạn không thể tự gỡ quyền admin của chính mình.');
+        }
+
+        $isDemoting = (bool) $user->is_admin;
+        if ($isDemoting) {
+            $adminCount = User::query()->where('is_admin', true)->count();
+            if ($adminCount <= 1) {
+                return redirect()->route('admin.users.index')->with('error', 'Không thể gỡ quyền admin của admin cuối cùng.');
+            }
+        }
+
+        $user->is_admin = ! $user->is_admin;
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'Đã cập nhật quyền admin.');
     }
 }
 
