@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -41,6 +42,20 @@ class Product extends Model
         'is_featured' => 'boolean',
         'is_vegetarian' => 'boolean',
     ];
+
+    public function getImageSrcAttribute(): ?string
+    {
+        $url = trim((string) ($this->image_url ?? ''));
+        if ($url === '') {
+            return null;
+        }
+
+        if (Str::startsWith($url, ['http://', 'https://'])) {
+            return $url;
+        }
+
+        return asset(ltrim($url, '/'));
+    }
 
     public function category()
     {

@@ -227,7 +227,7 @@
                         </div>
                         <a href="{{ route('menu.show', $product->slug) }}" style="text-decoration:none;">
                             <div class="menu-img">
-                                <img src="{{ $product->image_url ? asset($product->image_url) : asset('image/bare-logo.png') }}" alt="{{ $product->name }}">
+                                <img src="{{ $product->image_src ?: asset('image/bare-logo.png') }}" alt="{{ $product->name }}">
                             </div>
                         </a>
                         <a href="{{ route('menu.show', $product->slug) }}" style="text-decoration:none;">

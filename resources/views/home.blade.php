@@ -607,7 +607,7 @@
                                 {{ $product->category?->name ?? 'Healthy Bowl' }}
                             </div>
                             <div class="menu-img">
-                                <img src="{{ $product->image_url ? asset($product->image_url) : asset('image/bare-logo.png') }}" alt="{{ $product->name }}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 14px;">
+                                <img src="{{ $product->image_src ?: asset('image/bare-logo.png') }}" alt="{{ $product->name }}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 14px;">
                             </div>
                             <h3 class="menu-title">{{ $product->name }}</h3>
                             <div class="menu-meta">

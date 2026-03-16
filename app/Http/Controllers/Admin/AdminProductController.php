@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -37,8 +38,40 @@ class AdminProductController extends Controller
         $data = $this->validateData($request);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = 'storage/' . $path;
+            $cloudinaryUrl = trim((string) env('CLOUDINARY_URL', ''));
+            $uploadPreset = trim((string) env('CLOUDINARY_UPLOAD_PRESET', ''));
+
+            if ($cloudinaryUrl !== '' && $uploadPreset !== '') {
+                $cloudName = parse_url($cloudinaryUrl, PHP_URL_HOST);
+
+                if ($cloudName) {
+                    $file = $request->file('image');
+                    $response = Http::asMultipart()->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
+                        [
+                            'name' => 'file',
+                            'contents' => fopen($file->getPathname(), 'r'),
+                            'filename' => $file->getClientOriginalName(),
+                        ],
+                        [
+                            'name' => 'upload_preset',
+                            'contents' => $uploadPreset,
+                        ],
+                        [
+                            'name' => 'folder',
+                            'contents' => 'bare/products',
+                        ],
+                    ]);
+
+                    if ($response->successful() && ! empty($response->json('secure_url'))) {
+                        $data['image_url'] = $response->json('secure_url');
+                    }
+                }
+            }
+
+            if (empty($data['image_url'])) {
+                $path = $request->file('image')->store('products', 'public');
+                $data['image_url'] = 'storage/' . $path;
+            }
         }
         Product::create($data);
 
@@ -62,8 +95,40 @@ class AdminProductController extends Controller
                 Storage::disk('public')->delete($old);
             }
 
-            $path = $request->file('image')->store('products', 'public');
-            $data['image_url'] = 'storage/' . $path;
+            $cloudinaryUrl = trim((string) env('CLOUDINARY_URL', ''));
+            $uploadPreset = trim((string) env('CLOUDINARY_UPLOAD_PRESET', ''));
+
+            if ($cloudinaryUrl !== '' && $uploadPreset !== '') {
+                $cloudName = parse_url($cloudinaryUrl, PHP_URL_HOST);
+
+                if ($cloudName) {
+                    $file = $request->file('image');
+                    $response = Http::asMultipart()->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
+                        [
+                            'name' => 'file',
+                            'contents' => fopen($file->getPathname(), 'r'),
+                            'filename' => $file->getClientOriginalName(),
+                        ],
+                        [
+                            'name' => 'upload_preset',
+                            'contents' => $uploadPreset,
+                        ],
+                        [
+                            'name' => 'folder',
+                            'contents' => 'bare/products',
+                        ],
+                    ]);
+
+                    if ($response->successful() && ! empty($response->json('secure_url'))) {
+                        $data['image_url'] = $response->json('secure_url');
+                    }
+                }
+            }
+
+            if (empty($data['image_url'])) {
+                $path = $request->file('image')->store('products', 'public');
+                $data['image_url'] = 'storage/' . $path;
+            }
         }
         $product->update($data);
 

@@ -231,7 +231,7 @@
                             @if($product->exists && $product->image_url)
                                 <div style="margin-top: 12px;">
                                     <div style="font-size: 12px; color: var(--bare-text-muted); margin-bottom: 8px;">Ảnh hiện tại</div>
-                                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" style="width: 160px; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(189, 72, 35, 0.15);">
+                                    <img src="{{ $product->image_src }}" alt="{{ $product->name }}" style="width: 160px; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(189, 72, 35, 0.15);">
                                 </div>
                             @endif
                         </div>
